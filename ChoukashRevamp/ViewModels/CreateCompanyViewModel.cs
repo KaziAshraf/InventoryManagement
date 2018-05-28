@@ -253,7 +253,7 @@ namespace ChoukashRevamp.ViewModels
                 };
                 if (this.NextPage == null)
                 {
-                    RolePage = new CreateRoleViewModel("Create Role", company, this.EventAggregator);
+                    RolePage = new CreateRoleViewModel("Create Role", null, company, this.EventAggregator);
                     this.NextPage = new NavigatePage(RolePage);
                     this.EventAggregator.PublishOnUIThread(NextPage);
                 }

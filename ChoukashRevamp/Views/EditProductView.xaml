@@ -35,7 +35,7 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="Users" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Padding="5"/>
@@ -98,7 +98,7 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
             <TextBlock Grid.Column="1" Grid.Row="1" Text="Name" FontSize="9" Padding="5"
@@ -142,11 +142,12 @@
                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <ComboBox x:Name="Roles" Grid.Column="2" Grid.Row="9" Text="Please select role" Background="White" FontSize="9" BorderThickness="0" 
                       ItemsSource="{Binding UserRoles}" DisplayMemberPath="name" SelectedItem="{Binding CurrentUserRole}"/>
-            <Label Grid.Column="3" Grid.Row="9" Style="{StaticResource QuickLinkStyle}" Content="Edit" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action EditRole(Roles.SelectedItem)]"/>
+            <Label Grid.Column="3" Grid.Row="9" HorizontalAlignment="Right" Style="{StaticResource QuickLinkStyle}" Content="Update" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action UpdateRole(Roles.SelectedItem, UserInfoGrid.SelectedItem)]"/>
+            <Label Grid.Column="2" Grid.Row="10" HorizontalAlignment="Right" Style="{StaticResource QuickLinkStyle}" Content="Edit" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action EditRole(Roles.SelectedItem)]"/>
             <Label Grid.Column="3" Grid.Row="10" Style="{StaticResource QuickLinkStyle}" Content="Add" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action AddRole(CompaniesList.SelectedItem)]"/>
             
 
-            <TextBlock Grid.Column="2" Grid.Row="10" HorizontalAlignment="Center"
+            <TextBlock Grid.Column="2" Grid.Row="10" HorizontalAlignment="Left" FontSize="9" Foreground="Green"
                        x:Name="ErrorUserRole"/>
             
             

@@ -580,6 +580,7 @@ namespace ChoukashRevamp.ViewModels
             ErrorUserEmail = "";
             ErrorPassword = "";
             ErrorConfirmPassword = "";
+            ErrorUserRole = "";
             CurrentUserRole = null;
 
         }
@@ -645,12 +646,27 @@ namespace ChoukashRevamp.ViewModels
             }
         }
 
+        public void UpdateRole(Role role, User user) 
+        {
+            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            {
+                var _user = ctx.Users.Include(a => a.Role).Where(a => a.id == user.id).SingleOrDefault<User>();
+                _user.roles_id = role.id;
+
+                ctx.SaveChanges();
+
+
+                this.UserCollection = new ObservableCollection<User>(ctx.Users.Include(a => a.Role).Include(a => a.Company).ToList<User>());
+                ErrorUserRole = "Successfully updated role";
+            }
+        }
+
 
         public void AddRole(Company company) 
         {
             if (NavigationTool == null || NavigationTool.Params[0] != CreateRolePage && company != null) 
             {
-                this.CreateRolePage = new CreateRoleViewModel("Create Role", company, EventAggregator);
+                this.CreateRolePage = new CreateRoleViewModel("Add Role", null, company, EventAggregator);
                 this.NavigationTool = new NavigatePage(CreateRolePage);
                 EventAggregator.PublishOnUIThread(NavigationTool);
             }
@@ -663,12 +679,21 @@ namespace ChoukashRevamp.ViewModels
         {
             if (NavigationTool == null || NavigationTool.Params[0] != EditRolePage && role != null)
             {
-                this.EditRolePage = new CreateRoleViewModel("Edit Role", UserCompany, EventAggregator);
+                this.EditRolePage = new CreateRoleViewModel("Edit Role", role, UserCompany, EventAggregator);
                 this.NavigationTool = new NavigatePage(EditRolePage);
                 EventAggregator.PublishOnUIThread(NavigationTool);
             }
             else
-                EventAggregator.PublishOnUIThread(NavigationTool);
+            {
+                if (role.id != EditRolePage.UserRole.id) 
+                {
+                    this.EditRolePage = new CreateRoleViewModel("Edit Role", role, UserCompany, EventAggregator);
+                    this.NavigationTool = new NavigatePage(EditRolePage);
+                    EventAggregator.PublishOnUIThread(NavigationTool);
+                }
+                else
+                    EventAggregator.PublishOnUIThread(NavigationTool);
+            }
             
         }
     }
