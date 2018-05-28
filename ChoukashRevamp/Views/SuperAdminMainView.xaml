@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="ChoukashRevamp.Views.SuperAdminMainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+             mc:Ignorable="d" 
+             Background="White" Height="600" Width="1000">
+    <UserControl.Resources>
+        <Style x:Key="QuickLinkStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="Blue" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <!--Main Grid-->
+    <Grid Background="#E0F7FA">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Welcome Message top bar-->
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="#455A64">
+            <TextBlock Text="{Binding WelcomeMessage,Mode=OneWay}" Foreground="White" FontSize="15" 
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5"/>
+        </Grid>
+
+        <!--Menu-->
+        <Grid Grid.Row="1" Grid.Column="0" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Label Grid.Row="0" Content="Configure a new Product" cal:Message.Attach="[Event MouseDown] = [Action ConfigureNewProduct()]" 
+                   FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource QuickLinkStyle}"/>
+
+            <Label Grid.Row="1" Content="Edit Existing Products" cal:Message.Attach="[Event MouseDown] = [Action EditExistingProduct()]" 
+                   FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource QuickLinkStyle}"/>   
+        </Grid>
+        
+        
+
+        <ContentControl x:Name="ActiveItem" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5"/>
+    </Grid>
+</UserControl>

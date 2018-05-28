@@ -1,0 +1,159 @@
+﻿<UserControl x:Class="ChoukashRevamp.Views.EditProductView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:pwbx ="clr-namespace:ChoukashRevamp.Views.Validation"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             mc:Ignorable="d" 
+             Height="500" Width="700" Background="White">
+    <UserControl.Resources>
+        <Style x:Key="QuickLinkStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="Silver" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Users" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Padding="5"/>
+        <TextBlock Text="{Binding UserFormTitle}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Padding="5"/>
+        
+        
+        <TextBlock Text="Companies"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+        
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Content="Add" Style="{StaticResource QuickLinkStyle}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action AddCompany()]"/>
+            <Label Content="Edit"  Style="{StaticResource QuickLinkStyle}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action EditCompany(CompaniesList.SelectedItem)]"/>
+            <Label Content="Delete"  Style="{StaticResource QuickLinkStyle}" FontSize="9"  cal:Message.Attach="[Event MouseDown] = [Action DeleteCompany(CompaniesList.SelectedItem)]"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Content="Add"  Style="{StaticResource QuickLinkStyle}" IsEnabled="{Binding CDUser}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action AddUser()]"/>
+            <Label Content="Delete"  Style="{StaticResource QuickLinkStyle}" IsEnabled="{Binding CDUser}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action DeleteUser(UserInfoGrid.SelectedItem)]"/>
+        </StackPanel>
+       
+        <ListView x:Name="CompaniesList" Grid.Row="2" BorderThickness="0" cal:Message.Attach="[Event SelectionChanged] = [Action LoadAllUsersFromCompany(CompaniesList.SelectedItem)]"
+                  ItemsSource="{Binding CompanyCollection}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding name}" HorizontalAlignment="Center" FontSize="10" Foreground="Purple"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <DataGrid x:Name="UserInfoGrid" cal:Message.Attach="[Event SelectionChanged] = [Action LoadUserDetails(UserInfoGrid.SelectedItem)]" SelectedItem="{Binding SelectedUser}"
+            Grid.Column="1" Grid.Row="2" ItemsSource="{Binding UserCollection}" BorderThickness="0" CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Vertical">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="User Name" Binding="{Binding name}" Width="0.5*" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
+                <DataGridTextColumn Header="User Role" Binding="{Binding Role.name}" Width="0.5*" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <Grid x:Name="Details" Grid.Row="2" Grid.Column="2"  IsEnabled="{Binding ShowDetail}" cal:Message.Attach="[Event GotFocus] = [Action ToggleEditDetail()]">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="LostFocus">
+                    <cal:ActionMessage MethodName="ToggleEditDetail"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="Name" FontSize="9" Padding="5"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="2" Grid.Row="1" FontSize="9" cal:Message.Attach="[Event LostFocus] = [Action Validation(UserName.Name)]" 
+                     x:Name="UserName" BorderThickness="{Binding BorderThickness}" VerticalAlignment="Top" Margin="0,5,0,0"/>
+            <TextBlock Grid.Column="2" Grid.Row="2" x:Name="ErrorUserName" FontSize="7" Foreground="Red"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="Email" FontSize="9" Padding="5"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="2" Grid.Row="3" FontSize="9" cal:Message.Attach="[Event LostFocus] = [Action Validation(UserEmail.Name)]"
+                     x:Name="UserEmail" BorderThickness="{Binding BorderThickness}" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Grid.Row="4" x:Name="ErrorUserEmail" FontSize="7" Foreground="Red"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="5" Text="Password" FontSize="9" Padding="5"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <PasswordBox pwbx:BoundPasswordBox.BoundPassword="{Binding Password, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,NotifyOnValidationError=True,ValidatesOnDataErrors=True}"
+            x:Name="Password" Grid.Row="5" Grid.Column="2"  FontSize="9" VerticalAlignment="Center"
+                          BorderThickness="{Binding BorderThickness}"
+            cal:Message.Attach="[Event LostFocus] = [Action Validation(Password.Name)]">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PasswordChanged">
+                        <cal:ActionMessage MethodName="ReloadConfirmPassword"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </PasswordBox>
+            <TextBlock Grid.Column="2" Grid.Row="6" x:Name="ErrorPassword" FontSize="7" Foreground="Red"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="7" Text="Confirm Password" FontSize="9" Padding="5"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <PasswordBox pwbx:BoundPasswordBox.BoundPassword="{Binding ConfirmPassword, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,NotifyOnValidationError=True,ValidatesOnDataErrors=True}"
+            x:Name="ConfirmPassword" Grid.Row="7" Grid.Column="2" FontSize="9" VerticalAlignment="Center"  BorderThickness="{Binding BorderThickness}"
+            cal:Message.Attach="[Event LostFocus] = [Action Validation(ConfirmPassword.Name)]"/>
+            <TextBlock Grid.Column="2" Grid.Row="8" x:Name="ErrorConfirmPassword"
+                       HorizontalAlignment="Center" FontSize="7" Foreground="Red"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="9" Text="Select Role" FontSize="9" Padding="5"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <ComboBox x:Name="Roles" Grid.Column="2" Grid.Row="9" Text="Please select role" Background="White" FontSize="9" BorderThickness="0" 
+                      ItemsSource="{Binding UserRoles}" DisplayMemberPath="name" SelectedItem="{Binding CurrentUserRole}"/>
+            <Label Grid.Column="3" Grid.Row="9" Style="{StaticResource QuickLinkStyle}" Content="Edit" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action EditRole(Roles.SelectedItem)]"/>
+            <Label Grid.Column="3" Grid.Row="10" Style="{StaticResource QuickLinkStyle}" Content="Add" FontSize="10" cal:Message.Attach="[Event MouseDown] = [Action AddRole(CompaniesList.SelectedItem)]"/>
+            
+
+            <TextBlock Grid.Column="2" Grid.Row="10" HorizontalAlignment="Center"
+                       x:Name="ErrorUserRole"/>
+            
+            
+            <Button Grid.ColumnSpan="4" x:Name="CreateUser" Grid.Row="11" HorizontalAlignment="Center" 
+                    Content="Create" Padding="5" Background="Transparent" Visibility="{Binding Path=AllowCreationOfUser, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
+        
+
+    </Grid>
+</UserControl>
