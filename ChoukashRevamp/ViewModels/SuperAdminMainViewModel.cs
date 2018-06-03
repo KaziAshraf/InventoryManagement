@@ -106,6 +106,8 @@ namespace ChoukashRevamp.ViewModels
                 }
                 this.NextPageCompany = null;
                 this.CompanyPage = null;
+                this.NextPageEdit = null;
+                this.EditPage = null;
                 Console.WriteLine(Items.Count());
             }
         }

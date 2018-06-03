@@ -240,7 +240,51 @@ namespace ChoukashRevamp.ViewModels
 
         private void EditRole()
         {
-            
+            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            {
+                var role = ctx.Roles.Include(a => a.Role_Permission).Where(a => a.id == UserRole.id).SingleOrDefault<Role>();
+                role.name = RoleName;
+                role.description = RoleDescription;
+
+                IList<Permission> permissions = new List<Permission>();
+                for (int i = 0; i < ListPermissions.Count(); i++)
+                {
+                    if (ListPermissions[i].IsChecked)
+                    {
+                        permissions.Add(AllPermissions[i]);
+                    }
+                }
+
+                foreach (var permission in permissions) 
+                {
+                    if(!role.Role_Permission.Contains(ctx.Role_Permission.Where
+                        (a => a.permissions_id == permission.id && a.roles_id == UserRole.id).SingleOrDefault<Role_Permission>())) 
+                    {
+                        ctx.Role_Permission.Add(new Role_Permission() 
+                        {
+                            roles_id = UserRole.id,
+                            permissions_id = permission.id
+                        });
+                    }
+                }
+
+                foreach (var rp in role.Role_Permission.ToList()) 
+                {
+                    if (!permissions.Contains(AllPermissions.Where(a => a.id == rp.permissions_id).SingleOrDefault<Permission>()))
+                    {
+                        ctx.Role_Permission.Remove(rp);
+                    }
+                }
+                ctx.SaveChanges();
+                
+              
+
+                this.EventAggregator.PublishOnUIThread("Operation complete");
+
+                var editpage = new EditProductViewModel(ctx.SuperAdmins.Where(a => a.id == UserCompany.superadmin_id).SingleOrDefault<SuperAdmin>(), this.EventAggregator);
+                var tool = new NavigatePage(editpage);
+                this.EventAggregator.PublishOnUIThread(tool);
+            }
         }
 
         private void CreateRoleforCompany()

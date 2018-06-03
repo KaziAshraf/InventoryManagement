@@ -136,6 +136,7 @@
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SuperAdminMainViewModel.cs" />
     <Compile Include="ViewModels\UserLoginViewModel.cs" />
+    <Compile Include="ViewModels\UserMainViewModel.cs" />
     <Compile Include="Views\CreateCompanyView.xaml.cs">
       <DependentUpon>CreateCompanyView.xaml</DependentUpon>
     </Compile>
@@ -159,6 +160,9 @@
     </Compile>
     <Compile Include="Views\UserLoginView.xaml.cs">
       <DependentUpon>UserLoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserMainView.xaml.cs">
+      <DependentUpon>UserMainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Validation\BoundPasswordBox.cs" />
     <Compile Include="Views\Validation\ValidationClass.cs" />
@@ -245,6 +249,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserLoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserMainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

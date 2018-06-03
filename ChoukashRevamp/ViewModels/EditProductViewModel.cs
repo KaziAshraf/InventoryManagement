@@ -290,6 +290,13 @@ namespace ChoukashRevamp.ViewModels
                 this.UserCompany = usercompany;
                 ReloadAllUserInfo();
                 CDUser = true;
+
+
+                if (BorderThickness == 1) 
+                {
+                    BorderThickness = 0;
+                }
+
                 using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
                     if (this.UserCollection != null)
@@ -656,7 +663,8 @@ namespace ChoukashRevamp.ViewModels
                 ctx.SaveChanges();
 
 
-                this.UserCollection = new ObservableCollection<User>(ctx.Users.Include(a => a.Role).Include(a => a.Company).ToList<User>());
+                this.UserCollection = new ObservableCollection<User>(ctx.Users.Include(a => a.Role).Include(a => a.Company).
+                    Where(a => a.companies_id == user.companies_id).ToList<User>());
                 ErrorUserRole = "Successfully updated role";
             }
         }
