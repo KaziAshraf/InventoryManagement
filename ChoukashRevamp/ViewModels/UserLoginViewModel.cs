@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Data.Entity;
 
 namespace ChoukashRevamp.ViewModels
 {
@@ -75,7 +76,7 @@ namespace ChoukashRevamp.ViewModels
                 using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
                     var sa = ctx.SuperAdmins.Where(a => (a.name == UserName) && (a.password == Password)).FirstOrDefault<SuperAdmin>();
-                    var user = ctx.Users.Where(a => (a.name == UserName) && (a.password == Password)).FirstOrDefault<User>();
+                    var user = ctx.Users.Include(a => a.Company).Include(a => a.Role).Where(a => (a.name == UserName) && (a.password == Password)).FirstOrDefault<User>();
 
                     if (sa == null && user == null)
                     {
@@ -83,7 +84,11 @@ namespace ChoukashRevamp.ViewModels
                     }
                     else if (sa == null && user != null)
                     {
+                        DeactivateItem(this, true);
+                        base.TryClose();
+                        Navigator.Navigator.Navigate<ShellViewModel>(user);
 
+                        Application.Current.Windows[0].Close();
                     }
                     else if (sa != null && user == null)
                     {

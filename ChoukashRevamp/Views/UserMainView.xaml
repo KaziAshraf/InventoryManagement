@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              Height="600" Width="1000" Background="#CFD8DC">
     <UserControl.Resources>
@@ -15,11 +16,11 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -33,9 +34,21 @@
         
         <StackPanel Grid.Row="1" Grid.Column="0" Background="White">
             <Label Content="Inventory" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"/>
+            <Label Content="Users" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"
+                   cal:Message.Attach="[Event MouseDown] = [Action Navigate('User')]"/>
         </StackPanel>
-        
-        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="ActiveItem" Margin="15"/>
+
+        <TabControl Grid.Row="1" Grid.Column="1" x:Name="Items" Margin="15">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding DisplayName}" />
+                        <Button Content="X"
+                                cal:Message.Attach="CloseItem($dataContext)" />
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
         
     </Grid>
 </UserControl>

@@ -57,9 +57,13 @@ namespace ChoukashRevamp.ViewModels
             
         }
         public ShellViewModel(User user) 
-        { 
-            
-            
+        {
+            this.WindowHeight = 700;
+            this.WindowWidth = 1200;
+            EventAggregator = new EventAggregator();
+            EventAggregator.Subscribe(this);
+            EventAggregator.PublishOnUIThread(new NavigatePage(new UserMainViewModel(user)));
+
         }
 
         public ShellViewModel(SuperAdmin sa) 
