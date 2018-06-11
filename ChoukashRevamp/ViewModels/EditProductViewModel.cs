@@ -468,6 +468,7 @@ namespace ChoukashRevamp.ViewModels
                     ctx.Users.Remove(_user);
                     ctx.SaveChanges();
                     LoadAllUsersFromCompany(_userCompany);
+                    LoadUserDetails(this.UserCollection.FirstOrDefault());
                 }
             }
         }
@@ -737,13 +738,13 @@ namespace ChoukashRevamp.ViewModels
             {
                 if (company != null && User == null)
                 {
-                    this.CreateRolePage = new CreateRoleViewModel("Add Role", null, company, EventAggregator);
+                    this.CreateRolePage = new CreateRoleViewModel("Add Role", null, company, EventAggregator) { DisplayName = "Add Role" };
                     this.NavigationTool = new NavigatePage(CreateRolePage);
                     EventAggregator.PublishOnUIThread(NavigationTool); 
                 }
                 else if (company != null && User != null)
                 {
-                    this.CreateRolePage = new CreateRoleViewModel("Add new Role", null, company, EventAggregator);
+                    this.CreateRolePage = new CreateRoleViewModel("Add new Role", null, company, EventAggregator) { DisplayName = "Add Role" };
                     this.NavigationTool = new NavigatePage(CreateRolePage);
                     EventAggregator.PublishOnUIThread(NavigationTool);
                 }
@@ -755,11 +756,19 @@ namespace ChoukashRevamp.ViewModels
 
         public void EditRole(Role role)
         {
-            if (NavigationTool == null || NavigationTool.Params[0] != EditRolePage && role != null)
+            if (NavigationTool == null || NavigationTool.Params[0] != EditRolePage)
             {
-                this.EditRolePage = new CreateRoleViewModel("Edit Role", role, UserCompany, EventAggregator);
-                this.NavigationTool = new NavigatePage(EditRolePage);
-                EventAggregator.PublishOnUIThread(NavigationTool);
+                if (role != null && User == null)
+                {
+                    this.EditRolePage = new CreateRoleViewModel("Edit Role", role, UserCompany, EventAggregator) { DisplayName = "Edit Role" };
+                    this.NavigationTool = new NavigatePage(EditRolePage);
+                    EventAggregator.PublishOnUIThread(NavigationTool); 
+                }
+                else if(role != null && User != null) {
+                    this.EditRolePage = new CreateRoleViewModel("Edit Existing Role", role, UserCompany, EventAggregator) { DisplayName = "Edit Role" };
+                    this.NavigationTool = new NavigatePage(EditRolePage);
+                    EventAggregator.PublishOnUIThread(NavigationTool);
+                }
             }
             else
             {
@@ -780,6 +789,9 @@ namespace ChoukashRevamp.ViewModels
             switch (message)
             {
                 case "Added new Role":
+                    LoadUserDetails(User);
+                    break;
+                case "Edited Existing Role":
                     LoadUserDetails(User);
                     break;
             }

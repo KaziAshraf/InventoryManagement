@@ -231,6 +231,9 @@ namespace ChoukashRevamp.ViewModels
                 case "Edit Role":
                     EditRole();
                     break;
+                case "Edit Existing Role":
+                    EditRole();
+                    break;
                 case "Add Role":
                     CreateRoleforCompany();
                     break;
@@ -279,14 +282,22 @@ namespace ChoukashRevamp.ViewModels
                     }
                 }
                 ctx.SaveChanges();
-                
-              
 
-                this.EventAggregator.PublishOnUIThread("Operation complete");
 
-                var editpage = new EditProductViewModel(ctx.SuperAdmins.Where(a => a.id == UserCompany.superadmin_id).SingleOrDefault<SuperAdmin>(), this.EventAggregator);
-                var tool = new NavigatePage(editpage);
-                this.EventAggregator.PublishOnUIThread(tool);
+
+                if (this.Title == "Edit Role")
+                {
+                    this.EventAggregator.PublishOnUIThread("Operation complete");
+
+                    var editpage = new EditProductViewModel(ctx.SuperAdmins.Where(a => a.id == UserCompany.superadmin_id).SingleOrDefault<SuperAdmin>(), this.EventAggregator);
+                    var tool = new NavigatePage(editpage);
+                    this.EventAggregator.PublishOnUIThread(tool); 
+                }
+                else if(this.Title == "Edit Existing Role")
+                {
+                    this.EventAggregator.PublishOnUIThread("Edited Existing Role");
+                    this.EventAggregator.PublishOnUIThread(this);
+                }
             }
         }
 
