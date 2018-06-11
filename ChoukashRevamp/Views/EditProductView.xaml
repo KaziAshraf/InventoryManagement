@@ -6,7 +6,6 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:pwbx ="clr-namespace:ChoukashRevamp.Views.Validation"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d" 
              Height="500" Width="700" Background="White">
     <UserControl.Resources>
@@ -43,12 +42,15 @@
         
         
         <TextBlock Text="Companies"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-        
-        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Label Content="Add" Style="{StaticResource QuickLinkStyle}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action AddCompany()]"/>
-            <Label Content="Edit"  Style="{StaticResource QuickLinkStyle}" FontSize="9" cal:Message.Attach="[Event MouseDown] = [Action EditCompany(CompaniesList.SelectedItem)]"/>
-            <Label Content="Delete"  Style="{StaticResource QuickLinkStyle}" FontSize="9"  cal:Message.Attach="[Event MouseDown] = [Action DeleteCompany(CompaniesList.SelectedItem)]"/>
+                   VerticalAlignment="Center" Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Label Content="Add" Style="{StaticResource QuickLinkStyle}" FontSize="9"  
+                   cal:Message.Attach="[Event MouseDown] = [Action AddCompany()]"/>
+            <Label Content="Edit"  Style="{StaticResource QuickLinkStyle}" FontSize="9"  
+                   cal:Message.Attach="[Event MouseDown] = [Action EditCompany(CompaniesList.SelectedItem)]"/>
+            <Label Content="Delete"  Style="{StaticResource QuickLinkStyle}" FontSize="9"   
+                   cal:Message.Attach="[Event MouseDown] = [Action DeleteCompany(CompaniesList.SelectedItem)]"/>
         </StackPanel>
         
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -57,7 +59,8 @@
         </StackPanel>
        
         <ListView x:Name="CompaniesList" Grid.Row="2" BorderThickness="0" cal:Message.Attach="[Event SelectionChanged] = [Action LoadAllUsersFromCompany(CompaniesList.SelectedItem)]"
-                  ItemsSource="{Binding CompanyCollection}">
+                  Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  ItemsSource="{Binding CompanyCollection}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding name}" HorizontalAlignment="Center" FontSize="10" Foreground="Purple"/>

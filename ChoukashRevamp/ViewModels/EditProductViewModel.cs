@@ -15,7 +15,7 @@ using System.Data.Entity;
 
 namespace ChoukashRevamp.ViewModels
 {
-    public sealed class EditProductViewModel:Conductor<object>.Collection.OneActive
+    public sealed class EditProductViewModel:Conductor<object>.Collection.OneActive,IHandle<String>
     {
         #region Declaration
         private ObservableCollection<Company> _companycollection;
@@ -24,6 +24,7 @@ namespace ChoukashRevamp.ViewModels
         private bool _allowcreationofuser { get; set; }
         private SuperAdmin SA { get; set; }
         private User CurrentUser { get; set; }
+        private User User { get; set; }
         private CreateCompanyViewModel CreateCompanyPage { get; set; }
         private CreateCompanyViewModel EditCompanyPage { get; set; }
         private CreateRoleViewModel CreateRolePage { get; set; }
@@ -33,6 +34,18 @@ namespace ChoukashRevamp.ViewModels
         private Company UserCompany { get; set; }
 
         private User _selecteduser;
+
+        private Company _selectedcompany;
+
+        public Company SelectedCompany
+        {
+            get { return _selectedcompany; }
+            set {
+                _selectedcompany = value;
+                NotifyOfPropertyChange(() => SelectedCompany);
+            }
+        }
+
 
         private string _username;
         private string _errorusername;
@@ -49,6 +62,17 @@ namespace ChoukashRevamp.ViewModels
         private Role _currentuserrole;
         private string _userformtitle;
         private bool _cduser;
+        private bool _IsAdmin;
+
+        public bool IsAdmin
+        {
+            get { return _IsAdmin; }
+            set
+            {
+                _IsAdmin = value;
+                NotifyOfPropertyChange(() => IsAdmin);
+            }
+        }
 
         public bool CDUser
         {
@@ -79,8 +103,15 @@ namespace ChoukashRevamp.ViewModels
             get { return _selecteduser; }
             set
             {
-                _selecteduser = value;
-                NotifyOfPropertyChange(() => SelectedUser);
+                if (value != null)
+                {
+                    _selecteduser = value;
+                    NotifyOfPropertyChange(() => SelectedUser);
+                }
+                else
+                {
+                    SelectedUser = UserCollection.FirstOrDefault();
+                }
             }
         }
 
@@ -257,16 +288,42 @@ namespace ChoukashRevamp.ViewModels
         public EditProductViewModel(SuperAdmin sa, IEventAggregator ea)
         {
             this.SA = sa;
-            
-            
+            this.IsAdmin = true;
+
             this.EventAggregator = ea;
             this.EventAggregator.Subscribe(this);
 
-            this.CompanyCollection = new ObservableCollection<Company>();
+           // this.CompanyCollection = new ObservableCollection<Company>();
             this.BorderThickness = 0;
             this.ShowDetail = false;
 
             this.GetAllCompanies();
+        }
+        public EditProductViewModel(User user, IEventAggregator ea)
+        {
+            this.IsAdmin = false;
+            this.EventAggregator = ea;
+            this.EventAggregator.Subscribe(this);
+            this.User = user;
+            
+
+            this.BorderThickness = 0;
+            this.ShowDetail = false;
+            
+
+            ConfigureforUser();
+
+        }
+
+        private void ConfigureforUser()
+        {
+            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            {
+                var company = ctx.Companies.Include(a => a.Roles).Include(a => a.Users).Where(a => a.id == User.companies_id).SingleOrDefault();
+                this.CompanyCollection = new ObservableCollection<Company>() { company };
+                LoadAllUsersFromCompany(company);
+                this.SelectedCompany = CompanyCollection.FirstOrDefault();
+            }
         }
 
         #region Companies
@@ -274,11 +331,8 @@ namespace ChoukashRevamp.ViewModels
         {
             using (var ctx = new Choukash_Revamp_DemoEntities1())
             {
-                var companies = ctx.Companies.Include(a => a.Roles).Include(a => a.Users);
-                foreach (var company in companies)
-                {
-                    this.CompanyCollection.Add(company);
-                }
+                var companies = ctx.Companies.Include(a => a.Roles).Include(a => a.Users).ToList();
+                this.CompanyCollection = new ObservableCollection<Company>(companies);
             }
         }
 
@@ -299,10 +353,11 @@ namespace ChoukashRevamp.ViewModels
 
                 using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
-                    if (this.UserCollection != null)
-                    {
-                        this.UserCollection.Clear();
-                    }
+                    //if (this.UserCollection != null)
+                    //{
+                    //    SelectedUser = null;
+                    //    this.UserCollection.Clear();
+                    //}
                     var users = ctx.Users.Include(a => a.Role).Include(a => a.Company).Where(a => a.companies_id == usercompany.id).ToList();
 
                     //foreach (var user in users)
@@ -311,6 +366,7 @@ namespace ChoukashRevamp.ViewModels
                     //}
 
                     this.UserCollection = new ObservableCollection<User>(users);
+
                     this.UserRoles = new ObservableCollection<Role>(usercompany.Roles);
 
                 }
@@ -383,28 +439,29 @@ namespace ChoukashRevamp.ViewModels
                     }
                 }
             }
-        } 
+        }
         #endregion
 
-        public void AddUser() 
+        #region User
+        public void AddUser()
         {
-            ReloadAllUserInfo(); 
+            ReloadAllUserInfo();
             ShowDetail = true;
             BorderThickness = 1;
-                
+
             EditUserMode = false;
-            SelectedUser = null;
+
             CurrentUserRole = null;
-            
+
             if (!AllowCreationOfUser)
                 AllowCreationOfUser = true;
 
         }
-        public void DeleteUser(User user) 
+        public void DeleteUser(User user)
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities1())
             {
-                if (user != null) 
+                if (user != null)
                 {
                     var _user = ctx.Users.Include(a => a.Role).Include(a => a.Company).Where(a => a.id == user.id).FirstOrDefault<User>();
                     var _userCompany = ctx.Companies.Include(a => a.Roles).Where(a => a.id == _user.companies_id).FirstOrDefault<Company>();
@@ -420,30 +477,30 @@ namespace ChoukashRevamp.ViewModels
             {
                 var user = ctx.Users.Include(a => a.Role).Include(a => a.Company).Where(a => a.id == CurrentUser.id).SingleOrDefault<User>();
                 var _user = this.UserCollection.Where(a => a.id == CurrentUser.id).SingleOrDefault<User>();
-                if (user.name != UserName) 
+                if (user.name != UserName)
                 {
                     user.name = UserName;
                     _user.name = UserName;
                 }
-                else if (user.email != UserEmail) 
+                else if (user.email != UserEmail)
                 {
                     user.email = UserEmail;
                     _user.email = UserEmail;
                 }
-                else if (user.password != Password) 
+                else if (user.password != Password)
                 {
                     user.password = Password;
                     _user.password = Password;
                 }
-                else if (user.roles_id != CurrentUserRole.id) 
+                else if (user.roles_id != CurrentUserRole.id)
                 {
                     user.Role = CurrentUserRole;
                     _user.Role = CurrentUserRole;
                 }
- 
+
                 ctx.SaveChanges();
                 ReloadUserCollection(user.Company);
-                
+
             }
         }
 
@@ -487,15 +544,15 @@ namespace ChoukashRevamp.ViewModels
                         }
                         else
                         {
-                            if (!ValidationClass.UniqueTestforEmail(UserEmail,"User") && !EditUserMode)
+                            if (!ValidationClass.UniqueTestforEmail(UserEmail, "User") && !EditUserMode)
                             {
                                 ErrorUserEmail = "This Email ID is already associated with another user";
                             }
                             else if (EditUserMode && CurrentUser != null)
                             {
-                                if (!ValidationClass.UniqueTestforEmail(CurrentUser.id,UserEmail,"User"))
+                                if (!ValidationClass.UniqueTestforEmail(CurrentUser.id, UserEmail, "User"))
                                 {
-                                    ErrorUserEmail = "This Email ID is already associated with another user"; 
+                                    ErrorUserEmail = "This Email ID is already associated with another user";
                                 }
                             }
                             else
@@ -557,25 +614,25 @@ namespace ChoukashRevamp.ViewModels
                     {
                         ErrorUserRole = "Please select arole for user.";
                     }
-                    else 
+                    else
                     {
                         ErrorUserRole = "";
                     }
                     break;
             }
 
-        } 
+        }
         #endregion
 
 
-        public void ToggleEditDetail() 
+        public void ToggleEditDetail()
         {
             if (BorderThickness == 0)
             {
                 BorderThickness = 1;
             }
-           
-            
+
+
         }
         private void ReloadAllUserInfo()
         {
@@ -594,7 +651,7 @@ namespace ChoukashRevamp.ViewModels
 
         public void ReloadConfirmPassword() { ConfirmPassword = null; }
 
-        public void LoadUserDetails(User user) 
+        public void LoadUserDetails(User user)
         {
             if (user != null && SelectedUser != null)
             {
@@ -604,8 +661,8 @@ namespace ChoukashRevamp.ViewModels
                 EditUserMode = true;
                 AllowCreationOfUser = false;
                 BorderThickness = 0;
-                
-                
+
+
                 using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
                     if (this.UserRoles != null)
@@ -622,16 +679,16 @@ namespace ChoukashRevamp.ViewModels
                     Password = user.password;
                     ConfirmPassword = user.password;
                     CurrentUserRole = compnay_roles.Roles.Where(a => a.id == user.roles_id).SingleOrDefault<Role>();
-                }    
+                }
             }
         }
 
-        public void CreateUser() 
+        public void CreateUser()
         {
-            if (String.IsNullOrWhiteSpace(ErrorUserName) && String.IsNullOrWhiteSpace(ErrorUserEmail) 
-                && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword) && String.IsNullOrWhiteSpace(ErrorUserRole)) 
+            if (String.IsNullOrWhiteSpace(ErrorUserName) && String.IsNullOrWhiteSpace(ErrorUserEmail)
+                && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword) && String.IsNullOrWhiteSpace(ErrorUserRole))
             {
-                using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+                using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
                     ctx.Users.Add(new User()
                     {
@@ -647,43 +704,56 @@ namespace ChoukashRevamp.ViewModels
                     ReloadAllUserInfo();
                 }
             }
-            else if (CurrentUserRole == null) 
+            else if (CurrentUserRole == null)
             {
                 ErrorUserRole = "Please select a role";
             }
         }
+        #endregion
 
-        public void UpdateRole(Role role, User user) 
+        #region Roles
+        public void UpdateRole(Role role, User user)
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities1())
             {
-                var _user = ctx.Users.Include(a => a.Role).Where(a => a.id == user.id).SingleOrDefault<User>();
+
+                var _user = ctx.Users.Include(a => a.Role).Where(a => a.id == SelectedUser.id).SingleOrDefault<User>();
                 _user.roles_id = role.id;
 
                 ctx.SaveChanges();
 
 
                 this.UserCollection = new ObservableCollection<User>(ctx.Users.Include(a => a.Role).Include(a => a.Company).
-                    Where(a => a.companies_id == user.companies_id).ToList<User>());
+                    Where(a => a.companies_id == SelectedUser.companies_id).ToList<User>());
                 ErrorUserRole = "Successfully updated role";
+
             }
         }
 
 
-        public void AddRole(Company company) 
+        public void AddRole(Company company)
         {
-            if (NavigationTool == null || NavigationTool.Params[0] != CreateRolePage && company != null) 
+            if (NavigationTool == null || NavigationTool.Params[0] != CreateRolePage)
             {
-                this.CreateRolePage = new CreateRoleViewModel("Add Role", null, company, EventAggregator);
-                this.NavigationTool = new NavigatePage(CreateRolePage);
-                EventAggregator.PublishOnUIThread(NavigationTool);
+                if (company != null && User == null)
+                {
+                    this.CreateRolePage = new CreateRoleViewModel("Add Role", null, company, EventAggregator);
+                    this.NavigationTool = new NavigatePage(CreateRolePage);
+                    EventAggregator.PublishOnUIThread(NavigationTool); 
+                }
+                else if (company != null && User != null)
+                {
+                    this.CreateRolePage = new CreateRoleViewModel("Add new Role", null, company, EventAggregator);
+                    this.NavigationTool = new NavigatePage(CreateRolePage);
+                    EventAggregator.PublishOnUIThread(NavigationTool);
+                }
             }
             else
                 EventAggregator.PublishOnUIThread(NavigationTool);
 
         }
 
-        public void EditRole(Role role) 
+        public void EditRole(Role role)
         {
             if (NavigationTool == null || NavigationTool.Params[0] != EditRolePage && role != null)
             {
@@ -693,7 +763,7 @@ namespace ChoukashRevamp.ViewModels
             }
             else
             {
-                if (role.id != EditRolePage.UserRole.id) 
+                if (role.id != EditRolePage.UserRole.id)
                 {
                     this.EditRolePage = new CreateRoleViewModel("Edit Role", role, UserCompany, EventAggregator);
                     this.NavigationTool = new NavigatePage(EditRolePage);
@@ -702,7 +772,18 @@ namespace ChoukashRevamp.ViewModels
                 else
                     EventAggregator.PublishOnUIThread(NavigationTool);
             }
-            
+
         }
-    }
+
+        public void Handle(string message)
+        {
+            switch (message)
+            {
+                case "Added new Role":
+                    LoadUserDetails(User);
+                    break;
+            }
+        }
+    } 
+    #endregion
 }

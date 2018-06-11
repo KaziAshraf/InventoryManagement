@@ -33,9 +33,9 @@
         </Grid>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Background="White">
-            <Label Content="Inventory" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"/>
-            <Label Content="Users" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"
-                   cal:Message.Attach="[Event MouseDown] = [Action Navigate('User')]"/>
+            <Label Content="Inventory" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"/>
+            <Label Content="Configure User and Roles" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"
+                   cal:Message.Attach="[Event MouseDown] = [Action Navigate('UsersRoles')]"/>
         </StackPanel>
 
         <TabControl Grid.Row="1" Grid.Column="1" x:Name="Items" Margin="15">
@@ -43,7 +43,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding DisplayName}" />
-                        <Button Content="X"
+                        <Button Content="X" Background="Transparent" Margin="3,0,0,0" BorderThickness="0" FontSize="11"
                                 cal:Message.Attach="CloseItem($dataContext)" />
                     </StackPanel>
                 </DataTemplate>

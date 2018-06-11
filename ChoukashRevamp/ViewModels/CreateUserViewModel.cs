@@ -12,12 +12,13 @@ namespace ChoukashRevamp.ViewModels
 {
     public sealed class CreateUserViewModel:Conductor<object>
     {
+        #region Declaration
         private Role UserRole { get; set; }
         private Company Company { get; set; }
         private IList<Permission> UserPermissions { get; set; }
 
         public IEventAggregator EventAggregator { get; private set; }
-        
+
         private string _title;
         private string _username;
         private string _useremail;
@@ -27,82 +28,102 @@ namespace ChoukashRevamp.ViewModels
         private string _erroruseremail;
         private string _errorpasssword;
         private string _errorconfirmpassword;
+        private string _erroruserrole;
+
+        public string ErrorUserRole
+        {
+            get { return _erroruserrole; }
+            set
+            {
+                _erroruserrole = value;
+                NotifyOfPropertyChange(() => ErrorConfirmPassword);
+            }
+        }
+
 
         public string ErrorConfirmPassword
         {
             get { return _errorconfirmpassword; }
-            set { 
+            set
+            {
                 _errorconfirmpassword = value;
                 NotifyOfPropertyChange(() => ErrorConfirmPassword);
             }
         }
-        
+
 
         public string ErrorPassword
         {
             get { return _errorpasssword; }
-            set { 
+            set
+            {
                 _errorpasssword = value;
                 NotifyOfPropertyChange(() => ErrorPassword);
             }
         }
-        
+
 
         public string ErrorUserEmail
         {
             get { return _erroruseremail; }
-            set { 
+            set
+            {
                 _erroruseremail = value;
                 NotifyOfPropertyChange(() => ErrorUserEmail);
             }
         }
-        
+
 
         public string ErrorUserName
         {
             get { return _errorusername; }
-            set {
+            set
+            {
                 _errorusername = value;
                 NotifyOfPropertyChange(() => ErrorUserName);
             }
         }
-        
+
 
         public string ConfirmPassword
         {
             get { return _confirmpassword; }
-            set { 
+            set
+            {
                 _confirmpassword = value;
                 NotifyOfPropertyChange(() => ErrorConfirmPassword);
             }
         }
-        
+
 
         public string Password
         {
             get { return _password; }
-            set {
+            set
+            {
                 _password = value;
                 NotifyOfPropertyChange(() => Password);
             }
         }
-        
 
-        
+
+
         public string UserEmail
         {
             get { return _useremail; }
-            set { 
+            set
+            {
                 _useremail = value;
                 NotifyOfPropertyChange(() => UserEmail);
             }
         }
-        
+
 
         public string UserName
         {
             get { return _username; }
-            set {
+            set
+            {
                 _username = value;
                 NotifyOfPropertyChange(() => UserName);
             }
@@ -110,18 +131,32 @@ namespace ChoukashRevamp.ViewModels
         public string Title
         {
             get { return _title; }
-            set {
+            set
+            {
                 _title = value;
                 NotifyOfPropertyChange(() => Title);
             }
-        }
-        
+        } 
+        #endregion
+
         public CreateUserViewModel(string title, Company company, Role role, IList<Permission> permissions, IEventAggregator ea)
         {
+           
             this.Title = title;
             this.UserRole = role;
             this.UserPermissions = new List<Permission>();
             this.UserPermissions = permissions;
+            this.Company = company;
+
+            this.EventAggregator = ea;
+            this.EventAggregator.Subscribe(this);
+        }
+
+        public CreateUserViewModel(string title, Company company, Role role, IEventAggregator ea)
+        {
+            
+            this.Title = title;
+            this.UserRole = role;
             this.Company = company;
 
             this.EventAggregator = ea;
@@ -208,15 +243,25 @@ namespace ChoukashRevamp.ViewModels
         }
         public void Proceed() 
         {
+            switch (Title)
+            {
+                case "Create Admin":
+                    ConfigureFullProduct();
+                    break;
+                
+            }
+        }
+        public void ConfigureFullProduct()
+        {
             if (String.IsNullOrWhiteSpace(ErrorUserName) && String.IsNullOrWhiteSpace(ErrorUserEmail)
-                && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword)) 
+                && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword))
             {
                 using (var ctx = new Choukash_Revamp_DemoEntities1())
                 {
                     ctx.Companies.Add(Company);
                     ctx.Roles.Add(UserRole);
 
-                    foreach (var _permission in UserPermissions) 
+                    foreach (var _permission in UserPermissions)
                     {
                         var rolepermission = new Role_Permission()
                         {
@@ -235,7 +280,7 @@ namespace ChoukashRevamp.ViewModels
                     };
                     ctx.Users.Add(admin);
                     ctx.SaveChanges();
-                    
+
                     MessageBox.Show("New User Created");
 
                     this.EventAggregator.PublishOnUIThread("Operation complete");

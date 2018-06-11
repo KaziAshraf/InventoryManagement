@@ -7,6 +7,9 @@
              xmlns:pwbx ="clr-namespace:ChoukashRevamp.Views.Validation"
              mc:Ignorable="d" 
              Height="400" Width="650">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter"/>
+    </UserControl.Resources>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,6 +22,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
@@ -51,7 +55,13 @@
             x:Name="ConfirmPassword" Grid.Row="7" Grid.Column="2" FontSize="15" VerticalAlignment="Center"
             Margin="20" cal:Message.Attach="[Event LostFocus] = [Action Validation(Password.Name)]"/>
         <TextBlock x:Name="ErrorConfirmPassword" Grid.Row="8" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center"/>
-        
-        <Button x:Name="Proceed" Content="{Binding Title}" FontSize="15" Grid.Row="9" Grid.ColumnSpan="4" Padding="5" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+        <!--<TextBlock Text="User Role" Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" FontSize="15" Visibility="{Binding IsFromUser, Converter = {StaticResource Converter}}"/>
+        <StackPanel Grid.Row="9" Grid.Column="2" Orientation="Horizontal">
+            <ComboBox x:Name="Roles" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Visibility="{Binding IsFromUser, Converter = {StaticResource Converter}}" />
+            <TextBlock x:Name="ErrorUserRole" Margin="20,0,0,0" Foreground="Red" Visibility="{Binding IsFromUser, Converter = {StaticResource Converter}}"/>
+        </StackPanel>-->
+
+        <Button x:Name="Proceed" Content="{Binding Title}" FontSize="15" Grid.Row="10" Grid.Column="2" Padding="5" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

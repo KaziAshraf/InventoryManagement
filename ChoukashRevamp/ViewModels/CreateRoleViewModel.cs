@@ -234,6 +234,9 @@ namespace ChoukashRevamp.ViewModels
                 case "Add Role":
                     CreateRoleforCompany();
                     break;
+                case "Add new Role":
+                    CreateRoleforCompany();
+                    break;
             }
 
         }
@@ -315,17 +318,25 @@ namespace ChoukashRevamp.ViewModels
                             this.NextPage = new NavigatePage(UserPage);
                             this.EventAggregator.PublishOnUIThread(NextPage);
                         }
-                        else if (this.NextPage == null && this.Title == "Add Role") 
+                        else if (this.NextPage == null && this.Title == "Add Role")
                         {
                             ctx.Roles.Add(user_role);
-                            CastPermissiontoRolePermission(user_role, permissions,ctx);
+                            CastPermissiontoRolePermission(user_role, permissions, ctx);
                             ctx.SaveChanges();
-                            
+
                             var sa = ctx.SuperAdmins.Where(a => a.id == UserCompany.superadmin_id).SingleOrDefault<SuperAdmin>();
                             this.EventAggregator.PublishOnUIThread("Operation complete");
                             EditPage = new EditProductViewModel(sa, EventAggregator);
                             this.NextPage = new NavigatePage(EditPage);
                             this.EventAggregator.PublishOnUIThread(NextPage);
+                        }
+                        else if (this.NextPage == null && this.Title == "Add new Role")
+                        {
+                            ctx.Roles.Add(user_role);
+                            CastPermissiontoRolePermission(user_role, permissions, ctx);
+                            ctx.SaveChanges();
+                            this.EventAggregator.PublishOnUIThread("Added new Role");
+                            this.EventAggregator.PublishOnUIThread(this);
                         }
                         else
                             this.EventAggregator.PublishOnUIThread(NextPage);
@@ -348,10 +359,6 @@ namespace ChoukashRevamp.ViewModels
             }
         }
 
-       
         
-
-       
-
     }
 }
