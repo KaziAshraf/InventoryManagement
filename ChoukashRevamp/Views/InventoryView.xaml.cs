@@ -24,5 +24,20 @@ namespace ChoukashRevamp.Views
         {
             InitializeComponent();
         }
+
+        private void CategoryList_Loaded(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(sender.GetType());
+        }
+
+        private void CategoryList_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            Console.WriteLine(sender.GetType());
+        }
+
+        private void CategoryList_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+
+        }
     }
 }

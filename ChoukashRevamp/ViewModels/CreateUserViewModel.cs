@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace ChoukashRevamp.ViewModels
 {
-    public sealed class CreateUserViewModel:Conductor<object>
+    public sealed class CreateUserViewModel:Screen
     {
         #region Declaration
         private Role UserRole { get; set; }

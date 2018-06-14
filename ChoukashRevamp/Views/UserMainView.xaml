@@ -33,7 +33,8 @@
         </Grid>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Background="White">
-            <Label Content="Inventory" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"/>
+            <Label Content="Inventory" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"
+                   cal:Message.Attach="[Event MouseDown] = [Action Navigate('Inventory')]"/>
             <Label Content="Configure User and Roles" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource LinkStyle}"
                    cal:Message.Attach="[Event MouseDown] = [Action Navigate('UsersRoles')]"/>
         </StackPanel>

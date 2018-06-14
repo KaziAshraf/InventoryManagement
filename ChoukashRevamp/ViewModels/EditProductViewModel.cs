@@ -15,7 +15,7 @@ using System.Data.Entity;
 
 namespace ChoukashRevamp.ViewModels
 {
-    public sealed class EditProductViewModel:Conductor<object>.Collection.OneActive,IHandle<String>
+    public sealed class EditProductViewModel:Screen,IHandle<String>
     {
         #region Declaration
         private ObservableCollection<Company> _companycollection;

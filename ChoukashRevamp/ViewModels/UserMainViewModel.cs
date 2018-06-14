@@ -11,11 +11,13 @@ namespace ChoukashRevamp.ViewModels
 {
     public class UserMainViewModel:Conductor<object>.Collection.OneActive,IHandle<NavigatePage>,IHandle<Object>
     {
+        #region Decleration
         private readonly User _user;
         private readonly Choukash_Revamp_DemoEntities1 context = new Choukash_Revamp_DemoEntities1();
-        private NavigatePage tool { get; set; }
         private EditProductViewModel userrolepage { get; set; }
-        public IEventAggregator EventAggregator { get; set; }
+        private InventoryViewModel inventorypage { get; set; }
+        public IEventAggregator EventAggregator { get; set; } 
+        #endregion
 
         public UserMainViewModel(User user)
         {
@@ -35,22 +37,31 @@ namespace ChoukashRevamp.ViewModels
             switch (menu)
             {
                 case "UsersRoles":
-                    if (userrolepage == null || tool.Params[0] != userrolepage)
+                    if (userrolepage == null)
                     {
                         userrolepage = new EditProductViewModel(_user, EventAggregator) { DisplayName = "Add User" };
-                        tool = new NavigatePage(userrolepage);
-                        Handle(tool);
+                        ActivateItem(userrolepage);
                     }
                     else
-                        Handle(tool);
+                        ActivateItem(userrolepage);
                     break;
+                case "Inventory":
+                    if (inventorypage == null)
+                    {
+                        inventorypage = new InventoryViewModel(_user.Company) { DisplayName = "Inventory" };
+                        ActivateItem(inventorypage);
+                    }
+                    else
+                        ActivateItem(inventorypage);
+                    break;
+
             }
         }
 
         public void CloseItem(Object viewModel)
         {
             DeactivateItem(viewModel, true);
-            tool.Params[0] = null;
+            
         }
 
         public void Handle(object message)

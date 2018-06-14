@@ -13,7 +13,7 @@ using ChoukashRevamp.ViewModels.Navigator;
 
 namespace ChoukashRevamp.ViewModels
 {
-    public sealed class CreateRoleViewModel:Conductor<object>
+    public sealed class CreateRoleViewModel:Screen
     {
         #region Declaration
 
