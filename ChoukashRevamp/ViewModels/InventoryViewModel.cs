@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Collections.Specialized;
 using System.Windows.Controls;
+using ChoukashRevamp.ViewModels.Navigator;
 
 namespace ChoukashRevamp.ViewModels
 {
@@ -18,6 +19,20 @@ namespace ChoukashRevamp.ViewModels
         private Choukash_Revamp_DemoEntities1 Context = new Choukash_Revamp_DemoEntities1();
         private bool _createcategory;
         private Category _currentcategory;
+        private ObservableCollection<DataGridCategoryItem> _tests;
+
+        public ObservableCollection<DataGridCategoryItem> Tests
+        {
+            get { return _tests; }
+            set {
+                _tests = value;
+                NotifyOfPropertyChange(() => Tests);
+            }
+        }
+
+
+
+
 
         public Category CurrentCategory
         {
@@ -56,7 +71,7 @@ namespace ChoukashRevamp.ViewModels
             Company = company;
             Categories = LoadAllCategoriesofCompany;
             CreateCategory = false;
-
+            Tests = new ObservableCollection<DataGridCategoryItem>() { new DataGridCategoryItem() { Name = "Milk" } };
           
          
         }
@@ -67,11 +82,11 @@ namespace ChoukashRevamp.ViewModels
 
         public void AddNewCategory(object sender, DataGridCellEditEndingEventArgs e)
         {
-            var m = sender as DataGrid;
-
-            var b = m.ItemsSource as ObservableCollection<Category>;
-
-            Console.WriteLine(b.LastOrDefault().name);
+            if(e.EditAction == DataGridEditAction.Commit)
+            {
+                var m = e.Row.DataContext as DataGridCategoryItem;
+                Console.WriteLine(m.Name);
+            }
         }
 
         public void Test()

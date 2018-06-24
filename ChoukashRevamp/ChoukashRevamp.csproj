@@ -130,6 +130,7 @@
     <Compile Include="ViewModels\EditProductViewModel.cs" />
     <Compile Include="ViewModels\InventoryViewModel.cs" />
     <Compile Include="ViewModels\Navigator\CheckBoxListViewItem.cs" />
+    <Compile Include="ViewModels\Navigator\DataGridCategoryItem.cs" />
     <Compile Include="ViewModels\Navigator\NavigatePage.cs" />
     <Compile Include="ViewModels\Navigator\Navigator.cs" />
     <Compile Include="ViewModels\Navigator\Page.cs" />

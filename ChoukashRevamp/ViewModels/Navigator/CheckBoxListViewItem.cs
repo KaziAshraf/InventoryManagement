@@ -37,12 +37,8 @@ namespace ChoukashRevamp.ViewModels.Navigator
         
         public event PropertyChangedEventHandler PropertyChanged; 
         private void RaisePropertyChanged(string propName) 
-        { 
-            PropertyChangedEventHandler eh = PropertyChanged; 
-            if (eh != null) 
-            { 
-                eh(this, new PropertyChangedEventArgs(propName)); 
-            } 
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         

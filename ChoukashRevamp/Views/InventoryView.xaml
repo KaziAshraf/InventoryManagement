@@ -42,11 +42,11 @@
             <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action Test()]"  Content="Test" FontSize="12"  Margin="0,0,5,0"/>
         </StackPanel>
 
-        <DataGrid  x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Categories}"
-                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" cal:Message.Attach="[Event CellEditEnding] = [Action AddNewCategory($source,$eventArgs)]"
-                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247">
+        <DataGrid  x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Tests}"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" cal:Message.Attach="[Event CellEditEnding] = [Action AddNewCategory($source, $eventArgs)]"
+                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247" AddingNewItem="CategoryList_AddingNewItem">
             <DataGrid.Columns>
-                <DataGridTextColumn FontSize="12" Binding="{Binding name, TargetNullValue=Enter Category name}"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
+                <DataGridTextColumn FontSize="12"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
             </DataGrid.Columns>
         </DataGrid>
 

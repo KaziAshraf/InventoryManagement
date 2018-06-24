@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChoukashRevamp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace ChoukashRevamp.Views
             InitializeComponent();
         }
 
-       
+        private void CategoryList_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        {
+        }
     }
 }
