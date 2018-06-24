@@ -15,6 +15,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="RowStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,16 +35,37 @@
         <TextBlock Grid.Row="0" Grid.Column="1" Text="Sub-Categories" FontSize="15" HorizontalAlignment="Center"/>
         <TextBlock Grid.Row="0" Grid.Column="2" Text="Items" FontSize="15" HorizontalAlignment="Center"/>
 
-        <Label Style="{StaticResource Links}" Grid.Row="1" Grid.Column="0" Content="Delete" FontSize="12" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-        <Label Style="{StaticResource Links}" Grid.Row="1" Grid.Column="1" Content="Delete" FontSize="12" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-        <Label Style="{StaticResource Links}" Grid.Row="1" Grid.Column="2" Content="Delete" FontSize="12" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action EnableGridtoAddRow('Categories')]"  
+                   Content="Add" FontSize="12"  Margin="0,0,5,0"/>
+            <Label Style="{StaticResource Links}"  Content="Delete" FontSize="12"  Margin="0,0,5,0"/>
+            <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action Test()]"  Content="Test" FontSize="12"  Margin="0,0,5,0"/>
+        </StackPanel>
 
-        <DataGrid x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Categories}"
-                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="True" 
-                  GridLinesVisibility="None" Loaded="CategoryList_Loaded" LoadingRow="CategoryList_LoadingRow" SourceUpdated="CategoryList_SourceUpdated" HorizontalAlignment="Left" Width="247">
+        <DataGrid  x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Categories}"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" cal:Message.Attach="[Event CellEditEnding] = [Action AddNewCategory($source,$eventArgs)]"
+                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247">
             <DataGrid.Columns>
-                <DataGridTextColumn FontSize="12" Binding="{Binding name}"  Width="1.0*"/>
+                <DataGridTextColumn FontSize="12" Binding="{Binding name, TargetNullValue=Enter Category name}"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Style="{StaticResource Links}"  Content="Add" FontSize="12"  Margin="0,0,5,0"/>
+            <Label Style="{StaticResource Links}"  Content="Delete" FontSize="12"  Margin="0,0,5,0"/>
+        </StackPanel>
+
+        <!--<DataGrid x:Name="SubCategoryList" Grid.Row="2" Grid.Column="1" AutoGenerateColumns="False" ItemsSource="{Binding SubCategories}"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateSubCategory}" 
+                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247">
+            <DataGrid.Columns>
+                <DataGridTextColumn FontSize="12" ElementStyle="{StaticResource RowStyle}" Binding="{Binding name}"  Width="1.0*"/>
+            </DataGrid.Columns>
+        </DataGrid>-->
+
+        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Style="{StaticResource Links}"  Content="Add" FontSize="12"  Margin="0,0,5,0"/>
+            <Label Style="{StaticResource Links}"  Content="Delete" FontSize="12"  Margin="0,0,5,0"/>
+        </StackPanel>
     </Grid>
 </UserControl>
