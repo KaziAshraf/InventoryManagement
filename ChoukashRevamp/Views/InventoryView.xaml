@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ChoukashRevamp.Views"
              xmlns:cal="http://www.caliburnproject.org"
+              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              Height="540" Width="740" Background="White">
     <UserControl.Resources>
@@ -42,11 +43,16 @@
             <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action Test()]"  Content="Test" FontSize="12"  Margin="0,0,5,0"/>
         </StackPanel>
 
-        <DataGrid  x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Tests}"
-                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" cal:Message.Attach="[Event CellEditEnding] = [Action AddNewCategory($source, $eventArgs)]"
-                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247" AddingNewItem="CategoryList_AddingNewItem">
+        <DataGrid x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Categories}"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" GridLinesVisibility="None" HorizontalAlignment="Left" Width="247"
+                  cal:Message.Attach="[Event CurrentCellChanged] = [Action AddNewCategory($source, CategoryList.SelectedIndex)]">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="AddingNewItem">
+                    <cal:ActionMessage MethodName="TiggerCategoryCreationMode"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <DataGrid.Columns>
-                <DataGridTextColumn FontSize="12"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
+                <DataGridTextColumn FontSize="12" Binding="{Binding name}"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
             </DataGrid.Columns>
         </DataGrid>
 

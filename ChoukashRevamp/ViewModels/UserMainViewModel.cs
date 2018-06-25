@@ -48,7 +48,7 @@ namespace ChoukashRevamp.ViewModels
                 case "Inventory":
                     if (inventorypage == null)
                     {
-                        inventorypage = new InventoryViewModel(_user.Company) { DisplayName = "Inventory" };
+                        inventorypage = new InventoryViewModel(_user, _user.Company, EventAggregator) { DisplayName = "Inventory" };
                         ActivateItem(inventorypage);
                     }
                     else
