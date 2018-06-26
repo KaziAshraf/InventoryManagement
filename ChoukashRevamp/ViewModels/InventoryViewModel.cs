@@ -15,6 +15,7 @@ namespace ChoukashRevamp.ViewModels
 {
     public class InventoryViewModel:Screen
     {
+        #region Declaration
         private ObservableCollection<Category> _categories;
         private Choukash_Revamp_DemoEntities1 Context = new Choukash_Revamp_DemoEntities1();
         private bool _createcategory;
@@ -34,10 +35,11 @@ namespace ChoukashRevamp.ViewModels
         public Category CurrentCategory
         {
             get { return _currentcategory; }
-            set {
+            set
+            {
                 _currentcategory = value;
                 NotifyOfPropertyChange(() => CurrentCategory);
-                
+
             }
         }
 
@@ -45,7 +47,8 @@ namespace ChoukashRevamp.ViewModels
         public bool CreateCategory
         {
             get { return _createcategory; }
-            set {
+            set
+            {
                 _createcategory = value;
                 NotifyOfPropertyChange(() => CreateCategory);
             }
@@ -57,11 +60,13 @@ namespace ChoukashRevamp.ViewModels
         public ObservableCollection<Category> Categories
         {
             get { return _categories; }
-            set {
+            set
+            {
                 _categories = value;
                 NotifyOfPropertyChange(() => Categories);
             }
-        }
+        } 
+        #endregion
 
         public InventoryViewModel(User user, Company company, IEventAggregator ea)
         {
@@ -99,6 +104,30 @@ namespace ChoukashRevamp.ViewModels
         public void TiggerCategoryCreationMode()
         {
             CategoryCreationMode = true;
+        }
+        public void ValidateCells(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (!CategoryCreationMode)
+            {
+                TextBox textBox = e.EditingElement as TextBox;
+                var currentRow = e.Row.DataContext as Category;
+                if (String.IsNullOrWhiteSpace(textBox.Text))
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    var editedrow = Context.Categories.Where(a => a.id == currentRow.id).SingleOrDefault();
+                    editedrow.name = textBox.Text;
+                    Context.SaveChanges();
+                }
+            }
+            else
+            {
+                TextBox textBox = e.EditingElement as TextBox;
+                var currentRow = e.Row.DataContext as Category;
+
+            }
         }
         public void EnableGridtoAddRow(string entity)
         {

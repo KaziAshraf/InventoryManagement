@@ -50,6 +50,12 @@
                 <i:EventTrigger EventName="AddingNewItem">
                     <cal:ActionMessage MethodName="TiggerCategoryCreationMode"/>
                 </i:EventTrigger>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <cal:ActionMessage MethodName="ValidateCells">
+                        <cal:Parameter Value="$source"/>
+                        <cal:Parameter Value="$eventArgs"/>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
             <DataGrid.Columns>
                 <DataGridTextColumn FontSize="12" Binding="{Binding name}"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
