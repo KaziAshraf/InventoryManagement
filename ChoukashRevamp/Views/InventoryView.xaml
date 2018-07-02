@@ -40,40 +40,77 @@
             <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action EnableGridtoAddRow('Categories')]"  
                    Content="Add" FontSize="12"  Margin="0,0,5,0"/>
             <Label Style="{StaticResource Links}"  Content="Delete" FontSize="12"  Margin="0,0,5,0"/>
-            <Label Style="{StaticResource Links}" cal:Message.Attach="[Event MouseDown] = [Action Test()]"  Content="Test" FontSize="12"  Margin="0,0,5,0"/>
         </StackPanel>
 
         <DataGrid x:Name="CategoryList" Grid.Row="2" Grid.Column="0" AutoGenerateColumns="False" ItemsSource="{Binding Categories}"
-                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" GridLinesVisibility="None" HorizontalAlignment="Left" Width="247"
-                  cal:Message.Attach="[Event CurrentCellChanged] = [Action AddNewCategory($source, CategoryList.SelectedIndex)]">
+                  CanUserDeleteRows="True" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateCategory}" 
+                  GridLinesVisibility="None" HorizontalAlignment="Left" Width="247">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="AddingNewItem">
                     <cal:ActionMessage MethodName="TiggerCategoryCreationMode"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="CellEditEnding">
-                    <cal:ActionMessage MethodName="ValidateCells">
+                    <cal:ActionMessage MethodName="AddEditCategory">
                         <cal:Parameter Value="$source"/>
                         <cal:Parameter Value="$eventArgs"/>
                     </cal:ActionMessage>
                 </i:EventTrigger>
+                <i:EventTrigger EventName="PreviewKeyDown">
+                    <cal:ActionMessage MethodName="DeleteCategory">
+                        <cal:Parameter Value="$source"/>
+                        <cal:Parameter Value="$eventArgs"/>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="BeginingEdit">
+                    <cal:ActionMessage MethodName="TriggerCategoryModificationMode"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
+            
             <DataGrid.Columns>
                 <DataGridTextColumn FontSize="12" Binding="{Binding name}"  ElementStyle="{StaticResource RowStyle}" Width="1.0*"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Label Style="{StaticResource Links}"  Content="Add" FontSize="12"  Margin="0,0,5,0"/>
+            <Label Style="{StaticResource Links}"  Content="Add" FontSize="12"  Margin="0,0,5,0"
+                   cal:Message.Attach="[Event MouseDown] = [Action EnableGridtoAddRow('SubCategories')]"  />
             <Label Style="{StaticResource Links}"  Content="Delete" FontSize="12"  Margin="0,0,5,0"/>
         </StackPanel>
 
-        <!--<DataGrid x:Name="SubCategoryList" Grid.Row="2" Grid.Column="1" AutoGenerateColumns="False" ItemsSource="{Binding SubCategories}"
+        <DataGrid x:Name="SubCategoryList" Grid.Row="2" Grid.Column="1" AutoGenerateColumns="False" ItemsSource="{Binding SubCategories}"
                   CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="{Binding CreateSubCategory}" 
                   GridLinesVisibility="None" HorizontalAlignment="Left" Width="247">
             <DataGrid.Columns>
                 <DataGridTextColumn FontSize="12" ElementStyle="{StaticResource RowStyle}" Binding="{Binding name}"  Width="1.0*"/>
             </DataGrid.Columns>
-        </DataGrid>-->
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="AddingNewItem">
+                    <cal:ActionMessage MethodName="TiggerSubCategoryCreationMode"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <cal:ActionMessage MethodName="LoadSubCategoryFromCategory">
+                        <cal:Parameter Value="CategoryList.SelectedItem"/>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <cal:ActionMessage MethodName="AddEditSubCategory">
+                        <cal:Parameter Value="$source"/>
+                        <cal:Parameter Value="$eventArgs"/>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="PreviewKeyDown">
+                    <cal:ActionMessage MethodName="DeleteSubCategory">
+                        <cal:Parameter Value="$source"/>
+                        <cal:Parameter Value="$eventArgs"/>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="BeginingEdit">
+                    <cal:ActionMessage MethodName="TriggerSubCategoryModificationMode"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
+        </DataGrid>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Label Style="{StaticResource Links}"  Content="Add" FontSize="12"  Margin="0,0,5,0"/>
