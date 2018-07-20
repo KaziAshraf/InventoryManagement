@@ -14,6 +14,7 @@ namespace ChoukashRevamp.Models
     
     public partial class SuperAdmin
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SuperAdmin()
         {
             this.Companies = new HashSet<Company>();
@@ -25,6 +26,7 @@ namespace ChoukashRevamp.Models
         public string password { get; set; }
         public bool is_active { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Company> Companies { get; set; }
     }
 }

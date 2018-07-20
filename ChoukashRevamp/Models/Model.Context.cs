@@ -13,10 +13,10 @@ namespace ChoukashRevamp.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Choukash_Revamp_DemoEntities1 : DbContext
+    public partial class Choukash_Revamp_DemoEntities : DbContext
     {
-        public Choukash_Revamp_DemoEntities1()
-            : base("name=Choukash_Revamp_DemoEntities1")
+        public Choukash_Revamp_DemoEntities()
+            : base("name=Choukash_Revamp_DemoEntities")
         {
         }
     

@@ -188,7 +188,7 @@ namespace ChoukashRevamp.ViewModels
                        } 
                        else
                        {
-                           using (var ctx = new Choukash_Revamp_DemoEntities1())
+                           using (var ctx = new Choukash_Revamp_DemoEntities())
                            {
                                var email = ctx.Users.Where(a => a.email == this.UserEmail).FirstOrDefault<User>();
                                if (email == null)
@@ -256,7 +256,7 @@ namespace ChoukashRevamp.ViewModels
             if (String.IsNullOrWhiteSpace(ErrorUserName) && String.IsNullOrWhiteSpace(ErrorUserEmail)
                 && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword))
             {
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     ctx.Companies.Add(Company);
                     ctx.Roles.Add(UserRole);

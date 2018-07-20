@@ -195,7 +195,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void EditCompanyOnly()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities()) 
             {
                 var company = ctx.Companies.Where(a => a.id == _company.id).SingleOrDefault<Company>();
                
@@ -217,7 +217,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void CreateCompanyOnly()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities()) 
             {
                 ctx.Companies.Add(new Company()
                 {
@@ -241,7 +241,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void ConfigureInitialRole()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 var company = new Company()
                 {

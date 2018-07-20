@@ -14,6 +14,7 @@ namespace ChoukashRevamp.Models
     
     public partial class SubCategory
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SubCategory()
         {
             this.Items = new HashSet<Item>();
@@ -27,6 +28,7 @@ namespace ChoukashRevamp.Models
     
         public virtual Category Category { get; set; }
         public virtual Company Company { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Items { get; set; }
         public virtual User User { get; set; }
     }

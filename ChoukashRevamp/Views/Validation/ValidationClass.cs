@@ -29,7 +29,7 @@ namespace ChoukashRevamp.Views.Validation
         public static bool UniqueTestforEmail(int id, string email, string model) 
         {
             bool doesExist = true;
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 switch (model)
                 {
@@ -70,7 +70,7 @@ namespace ChoukashRevamp.Views.Validation
         public static bool UniqueTestforEmail(string email, string model)
         {
             bool doesExist = true;
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 switch (model)
                 {

@@ -49,7 +49,7 @@ namespace ChoukashRevamp.Views
                     this.ErrorEmail.Text = "This is not a valid Email Id.";
                 else
                 {
-                    using (var ctx = new Choukash_Revamp_DemoEntities1()) {
+                    using (var ctx = new Choukash_Revamp_DemoEntities()) {
                         var email = ctx.SuperAdmins.Where(a => a.email == this.Email.Text).FirstOrDefault<SuperAdmin>();
                         if (email == null) {
                             this.ErrorEmail.Text = "";

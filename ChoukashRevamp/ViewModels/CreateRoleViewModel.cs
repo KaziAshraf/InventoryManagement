@@ -155,7 +155,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void ConfigurePermissionAccordingtoRole()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities()) 
             {
                 var role_permissions = ctx.Role_Permission.Include(a => a.Role).Include(a => a.Permission).Where(a => a.roles_id == UserRole.id).ToList<Role_Permission>();
                 foreach (var role_permission in role_permissions) 
@@ -175,7 +175,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void GetAllPermissions()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 foreach (var p in ctx.Permissions)
                 {
@@ -246,7 +246,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void EditRole()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) 
+            using (var ctx = new Choukash_Revamp_DemoEntities()) 
             {
                 var role = ctx.Roles.Include(a => a.Role_Permission).Where(a => a.id == UserRole.id).SingleOrDefault<Role>();
                 role.name = RoleName;
@@ -307,7 +307,7 @@ namespace ChoukashRevamp.ViewModels
             {
                 if (this.CheckAllPermissions())
                 {
-                    using (var ctx = new Choukash_Revamp_DemoEntities1())
+                    using (var ctx = new Choukash_Revamp_DemoEntities())
                     {
                         IList<Permission> permissions = new List<Permission>();
                         Role user_role = new Role()
@@ -358,7 +358,7 @@ namespace ChoukashRevamp.ViewModels
             }
         }
 
-        private void CastPermissiontoRolePermission(Role user_role, IList<Permission> permissions, Choukash_Revamp_DemoEntities1 ctx)
+        private void CastPermissiontoRolePermission(Role user_role, IList<Permission> permissions, Choukash_Revamp_DemoEntities ctx)
         {
             foreach (var permission in permissions)
             {

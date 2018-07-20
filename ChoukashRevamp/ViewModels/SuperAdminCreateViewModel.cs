@@ -130,7 +130,7 @@ namespace ChoukashRevamp.ViewModels
         
         public void CreateSuperAdmin()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 var sa = new SuperAdmin()
                 {

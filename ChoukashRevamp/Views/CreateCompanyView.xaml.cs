@@ -53,7 +53,7 @@ namespace ChoukashRevamp.Views
                 }
                 else
                 {
-                    using (var ctx = new Choukash_Revamp_DemoEntities1())
+                    using (var ctx = new Choukash_Revamp_DemoEntities())
                     {
                         var email = ctx.Companies.Where(a => a.email == this.Email.Text).FirstOrDefault<Company>();
                         if (email == null)

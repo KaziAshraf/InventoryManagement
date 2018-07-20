@@ -73,7 +73,7 @@ namespace ChoukashRevamp.ViewModels
             if (!String.IsNullOrWhiteSpace(UserName) && !String.IsNullOrWhiteSpace(Password))
             {
 
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     var sa = ctx.SuperAdmins.Where(a => (a.name == UserName) && (a.password == Password)).FirstOrDefault<SuperAdmin>();
                     var user = ctx.Users.Include(a => a.Company).Include(a => a.Role).Where(a => (a.name == UserName) && (a.password == Password)).FirstOrDefault<User>();

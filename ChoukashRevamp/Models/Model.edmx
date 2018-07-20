@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Choukash_Revamp_DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Choukash_Revamp_DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categories">
           <Key>
             <PropertyRef Name="id" />
@@ -22,7 +22,7 @@
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="location" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="description" Type="ntext" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="superadmin_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Items">
@@ -31,7 +31,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="descritption" Type="ntext" Nullable="false" />
+          <Property Name="descritption" Type="nvarchar(max)" Nullable="false" />
           <Property Name="price" Type="int" Nullable="false" />
           <Property Name="subcategories_id" Type="int" Nullable="false" />
           <Property Name="users_id" Type="int" Nullable="false" />
@@ -71,7 +71,7 @@
           <Property Name="users_id" Type="int" Nullable="false" />
           <Property Name="companies_id" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="SuperAdmin">
+        <EntityType Name="SuperAdmins">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -93,7 +93,7 @@
           <Property Name="roles_id" Type="int" Nullable="false" />
           <Property Name="is_active" Type="bit" Nullable="false" />
         </EntityType>
-        <Association Name="Categories_Companies">
+        <Association Name="FK_Categories_Companies">
           <End Role="Companies" Type="Self.Companies" Multiplicity="1" />
           <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
           <ReferentialConstraint>
@@ -105,7 +105,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="categories_users">
+        <Association Name="FK_categories_users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
           <ReferentialConstraint>
@@ -117,11 +117,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="companies_superadmin">
-          <End Role="SuperAdmin" Type="Self.SuperAdmin" Multiplicity="1" />
+        <Association Name="FK_companies_superadmin">
+          <End Role="SuperAdmins" Type="Self.SuperAdmins" Multiplicity="1" />
           <End Role="Companies" Type="Self.Companies" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="SuperAdmin">
+            <Principal Role="SuperAdmins">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Companies">
@@ -129,7 +129,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Items_Companies">
+        <Association Name="FK_Items_Companies">
           <End Role="Companies" Type="Self.Companies" Multiplicity="1" />
           <End Role="Items" Type="Self.Items" Multiplicity="*" />
           <ReferentialConstraint>
@@ -141,7 +141,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="items_subcategories">
+        <Association Name="FK_items_subcategories">
           <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="1" />
           <End Role="Items" Type="Self.Items" Multiplicity="*" />
           <ReferentialConstraint>
@@ -153,7 +153,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Items_Users">
+        <Association Name="FK_Items_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Items" Type="Self.Items" Multiplicity="*" />
           <ReferentialConstraint>
@@ -165,7 +165,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="role_permission_permissions">
+        <Association Name="FK_role_permission_permissions">
           <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
           <End Role="Role_Permission" Type="Self.Role_Permission" Multiplicity="*" />
           <ReferentialConstraint>
@@ -177,7 +177,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="role_permission_roles">
+        <Association Name="FK_role_permission_roles">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="Role_Permission" Type="Self.Role_Permission" Multiplicity="*" />
           <ReferentialConstraint>
@@ -189,7 +189,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="roles_companies">
+        <Association Name="FK_roles_companies">
           <End Role="Companies" Type="Self.Companies" Multiplicity="1" />
           <End Role="Roles" Type="Self.Roles" Multiplicity="*" />
           <ReferentialConstraint>
@@ -201,7 +201,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="subcategories_categories">
+        <Association Name="FK_subcategories_categories">
           <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
           <ReferentialConstraint>
@@ -213,7 +213,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="SubCategories_Companies">
+        <Association Name="FK_SubCategories_Companies">
           <End Role="Companies" Type="Self.Companies" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
           <ReferentialConstraint>
@@ -225,7 +225,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="SubCategories_Users">
+        <Association Name="FK_SubCategories_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
           <ReferentialConstraint>
@@ -237,7 +237,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="users_companies">
+        <Association Name="FK_users_companies">
           <End Role="Companies" Type="Self.Companies" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
@@ -249,7 +249,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="users_roles">
+        <Association Name="FK_users_roles">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
@@ -269,61 +269,61 @@
           <EntitySet Name="Role_Permission" EntityType="Self.Role_Permission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubCategories" EntityType="Self.SubCategories" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SuperAdmin" EntityType="Self.SuperAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SuperAdmins" EntityType="Self.SuperAdmins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="Categories_Companies" Association="Self.Categories_Companies">
+          <AssociationSet Name="FK_Categories_Companies" Association="Self.FK_Categories_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Categories" EntitySet="Categories" />
           </AssociationSet>
-          <AssociationSet Name="categories_users" Association="Self.categories_users">
+          <AssociationSet Name="FK_categories_users" Association="Self.FK_categories_users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Categories" EntitySet="Categories" />
           </AssociationSet>
-          <AssociationSet Name="companies_superadmin" Association="Self.companies_superadmin">
-            <End Role="SuperAdmin" EntitySet="SuperAdmin" />
+          <AssociationSet Name="FK_companies_superadmin" Association="Self.FK_companies_superadmin">
+            <End Role="SuperAdmins" EntitySet="SuperAdmins" />
             <End Role="Companies" EntitySet="Companies" />
           </AssociationSet>
-          <AssociationSet Name="Items_Companies" Association="Self.Items_Companies">
+          <AssociationSet Name="FK_Items_Companies" Association="Self.FK_Items_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="items_subcategories" Association="Self.items_subcategories">
+          <AssociationSet Name="FK_items_subcategories" Association="Self.FK_items_subcategories">
             <End Role="SubCategories" EntitySet="SubCategories" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="Items_Users" Association="Self.Items_Users">
+          <AssociationSet Name="FK_Items_Users" Association="Self.FK_Items_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="role_permission_permissions" Association="Self.role_permission_permissions">
+          <AssociationSet Name="FK_role_permission_permissions" Association="Self.FK_role_permission_permissions">
             <End Role="Permissions" EntitySet="Permissions" />
             <End Role="Role_Permission" EntitySet="Role_Permission" />
           </AssociationSet>
-          <AssociationSet Name="role_permission_roles" Association="Self.role_permission_roles">
+          <AssociationSet Name="FK_role_permission_roles" Association="Self.FK_role_permission_roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Role_Permission" EntitySet="Role_Permission" />
           </AssociationSet>
-          <AssociationSet Name="roles_companies" Association="Self.roles_companies">
+          <AssociationSet Name="FK_roles_companies" Association="Self.FK_roles_companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Roles" EntitySet="Roles" />
           </AssociationSet>
-          <AssociationSet Name="subcategories_categories" Association="Self.subcategories_categories">
+          <AssociationSet Name="FK_subcategories_categories" Association="Self.FK_subcategories_categories">
             <End Role="Categories" EntitySet="Categories" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="SubCategories_Companies" Association="Self.SubCategories_Companies">
+          <AssociationSet Name="FK_SubCategories_Companies" Association="Self.FK_SubCategories_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="SubCategories_Users" Association="Self.SubCategories_Users">
+          <AssociationSet Name="FK_SubCategories_Users" Association="Self.FK_SubCategories_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="users_companies" Association="Self.users_companies">
+          <AssociationSet Name="FK_users_companies" Association="Self.FK_users_companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="users_roles" Association="Self.users_roles">
+          <AssociationSet Name="FK_users_roles" Association="Self.FK_users_roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
@@ -332,7 +332,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="Choukash_Revamp_DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="Choukash_Revamp_DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="id" />
@@ -341,9 +341,9 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="users_id" Type="Int32" Nullable="false" />
           <Property Name="companies_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Company" Relationship="Self.Categories_Companies" FromRole="Categories" ToRole="Companies" />
-          <NavigationProperty Name="User" Relationship="Self.categories_users" FromRole="Categories" ToRole="Users" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.subcategories_categories" FromRole="Categories" ToRole="SubCategories" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Categories_Companies" FromRole="Categories" ToRole="Companies" />
+          <NavigationProperty Name="User" Relationship="Self.FK_categories_users" FromRole="Categories" ToRole="Users" />
+          <NavigationProperty Name="SubCategories" Relationship="Self.FK_subcategories_categories" FromRole="Categories" ToRole="SubCategories" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -355,12 +355,12 @@
           <Property Name="location" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="superadmin_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.Categories_Companies" FromRole="Companies" ToRole="Categories" />
-          <NavigationProperty Name="SuperAdmin" Relationship="Self.companies_superadmin" FromRole="Companies" ToRole="SuperAdmin" />
-          <NavigationProperty Name="Items" Relationship="Self.Items_Companies" FromRole="Companies" ToRole="Items" />
-          <NavigationProperty Name="Roles" Relationship="Self.roles_companies" FromRole="Companies" ToRole="Roles" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.SubCategories_Companies" FromRole="Companies" ToRole="SubCategories" />
-          <NavigationProperty Name="Users" Relationship="Self.users_companies" FromRole="Companies" ToRole="Users" />
+          <NavigationProperty Name="Categories" Relationship="Self.FK_Categories_Companies" FromRole="Companies" ToRole="Categories" />
+          <NavigationProperty Name="SuperAdmin" Relationship="Self.FK_companies_superadmin" FromRole="Companies" ToRole="SuperAdmins" />
+          <NavigationProperty Name="Items" Relationship="Self.FK_Items_Companies" FromRole="Companies" ToRole="Items" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_roles_companies" FromRole="Companies" ToRole="Roles" />
+          <NavigationProperty Name="SubCategories" Relationship="Self.FK_SubCategories_Companies" FromRole="Companies" ToRole="SubCategories" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_users_companies" FromRole="Companies" ToRole="Users" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -373,9 +373,9 @@
           <Property Name="subcategories_id" Type="Int32" Nullable="false" />
           <Property Name="users_id" Type="Int32" Nullable="false" />
           <Property Name="companies_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Company" Relationship="Self.Items_Companies" FromRole="Items" ToRole="Companies" />
-          <NavigationProperty Name="SubCategory" Relationship="Self.items_subcategories" FromRole="Items" ToRole="SubCategories" />
-          <NavigationProperty Name="User" Relationship="Self.Items_Users" FromRole="Items" ToRole="Users" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Items_Companies" FromRole="Items" ToRole="Companies" />
+          <NavigationProperty Name="SubCategory" Relationship="Self.FK_items_subcategories" FromRole="Items" ToRole="SubCategories" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Items_Users" FromRole="Items" ToRole="Users" />
         </EntityType>
         <EntityType Name="Permission">
           <Key>
@@ -383,7 +383,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="menu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Role_Permission" Relationship="Self.role_permission_permissions" FromRole="Permissions" ToRole="Role_Permission" />
+          <NavigationProperty Name="Role_Permission" Relationship="Self.FK_role_permission_permissions" FromRole="Permissions" ToRole="Role_Permission" />
         </EntityType>
         <EntityType Name="Role_Permission">
           <Key>
@@ -392,8 +392,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="permissions_id" Type="Int32" Nullable="false" />
           <Property Name="roles_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Permission" Relationship="Self.role_permission_permissions" FromRole="Role_Permission" ToRole="Permissions" />
-          <NavigationProperty Name="Role" Relationship="Self.role_permission_roles" FromRole="Role_Permission" ToRole="Roles" />
+          <NavigationProperty Name="Permission" Relationship="Self.FK_role_permission_permissions" FromRole="Role_Permission" ToRole="Permissions" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_role_permission_roles" FromRole="Role_Permission" ToRole="Roles" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -403,9 +403,9 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="companies_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Company" Relationship="Self.roles_companies" FromRole="Roles" ToRole="Companies" />
-          <NavigationProperty Name="Role_Permission" Relationship="Self.role_permission_roles" FromRole="Roles" ToRole="Role_Permission" />
-          <NavigationProperty Name="Users" Relationship="Self.users_roles" FromRole="Roles" ToRole="Users" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_roles_companies" FromRole="Roles" ToRole="Companies" />
+          <NavigationProperty Name="Role_Permission" Relationship="Self.FK_role_permission_roles" FromRole="Roles" ToRole="Role_Permission" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_users_roles" FromRole="Roles" ToRole="Users" />
         </EntityType>
         <EntityType Name="SubCategory">
           <Key>
@@ -416,10 +416,10 @@
           <Property Name="categories_id" Type="Int32" Nullable="false" />
           <Property Name="users_id" Type="Int32" Nullable="false" />
           <Property Name="companies_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="Self.subcategories_categories" FromRole="SubCategories" ToRole="Categories" />
-          <NavigationProperty Name="Company" Relationship="Self.SubCategories_Companies" FromRole="SubCategories" ToRole="Companies" />
-          <NavigationProperty Name="Items" Relationship="Self.items_subcategories" FromRole="SubCategories" ToRole="Items" />
-          <NavigationProperty Name="User" Relationship="Self.SubCategories_Users" FromRole="SubCategories" ToRole="Users" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_subcategories_categories" FromRole="SubCategories" ToRole="Categories" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_SubCategories_Companies" FromRole="SubCategories" ToRole="Companies" />
+          <NavigationProperty Name="Items" Relationship="Self.FK_items_subcategories" FromRole="SubCategories" ToRole="Items" />
+          <NavigationProperty Name="User" Relationship="Self.FK_SubCategories_Users" FromRole="SubCategories" ToRole="Users" />
         </EntityType>
         <EntityType Name="SuperAdmin">
           <Key>
@@ -430,7 +430,7 @@
           <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="is_active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Companies" Relationship="Self.companies_superadmin" FromRole="SuperAdmin" ToRole="Companies" />
+          <NavigationProperty Name="Companies" Relationship="Self.FK_companies_superadmin" FromRole="SuperAdmins" ToRole="Companies" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -443,13 +443,13 @@
           <Property Name="companies_id" Type="Int32" Nullable="false" />
           <Property Name="roles_id" Type="Int32" Nullable="false" />
           <Property Name="is_active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.categories_users" FromRole="Users" ToRole="Categories" />
-          <NavigationProperty Name="Company" Relationship="Self.users_companies" FromRole="Users" ToRole="Companies" />
-          <NavigationProperty Name="Items" Relationship="Self.Items_Users" FromRole="Users" ToRole="Items" />
-          <NavigationProperty Name="Role" Relationship="Self.users_roles" FromRole="Users" ToRole="Roles" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.SubCategories_Users" FromRole="Users" ToRole="SubCategories" />
+          <NavigationProperty Name="Categories" Relationship="Self.FK_categories_users" FromRole="Users" ToRole="Categories" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_users_companies" FromRole="Users" ToRole="Companies" />
+          <NavigationProperty Name="Items" Relationship="Self.FK_Items_Users" FromRole="Users" ToRole="Items" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_users_roles" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="SubCategories" Relationship="Self.FK_SubCategories_Users" FromRole="Users" ToRole="SubCategories" />
         </EntityType>
-        <Association Name="Categories_Companies">
+        <Association Name="FK_Categories_Companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="1" />
           <End Role="Categories" Type="Self.Category" Multiplicity="*" />
           <ReferentialConstraint>
@@ -461,7 +461,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="categories_users">
+        <Association Name="FK_categories_users">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Categories" Type="Self.Category" Multiplicity="*" />
           <ReferentialConstraint>
@@ -473,7 +473,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="subcategories_categories">
+        <Association Name="FK_subcategories_categories">
           <End Role="Categories" Type="Self.Category" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
@@ -485,11 +485,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="companies_superadmin">
-          <End Role="SuperAdmin" Type="Self.SuperAdmin" Multiplicity="1" />
+        <Association Name="FK_companies_superadmin">
+          <End Role="SuperAdmins" Type="Self.SuperAdmin" Multiplicity="1" />
           <End Role="Companies" Type="Self.Company" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="SuperAdmin">
+            <Principal Role="SuperAdmins">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Companies">
@@ -497,7 +497,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Items_Companies">
+        <Association Name="FK_Items_Companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="1" />
           <End Role="Items" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
@@ -509,7 +509,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="roles_companies">
+        <Association Name="FK_roles_companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="1" />
           <End Role="Roles" Type="Self.Role" Multiplicity="*" />
           <ReferentialConstraint>
@@ -521,7 +521,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="SubCategories_Companies">
+        <Association Name="FK_SubCategories_Companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
@@ -533,7 +533,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="users_companies">
+        <Association Name="FK_users_companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="1" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
@@ -545,7 +545,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="items_subcategories">
+        <Association Name="FK_items_subcategories">
           <End Role="SubCategories" Type="Self.SubCategory" Multiplicity="1" />
           <End Role="Items" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
@@ -557,7 +557,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Items_Users">
+        <Association Name="FK_Items_Users">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Items" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
@@ -569,7 +569,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="role_permission_permissions">
+        <Association Name="FK_role_permission_permissions">
           <End Role="Permissions" Type="Self.Permission" Multiplicity="1" />
           <End Role="Role_Permission" Type="Self.Role_Permission" Multiplicity="*" />
           <ReferentialConstraint>
@@ -581,7 +581,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="role_permission_roles">
+        <Association Name="FK_role_permission_roles">
           <End Role="Roles" Type="Self.Role" Multiplicity="1" />
           <End Role="Role_Permission" Type="Self.Role_Permission" Multiplicity="*" />
           <ReferentialConstraint>
@@ -593,7 +593,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="users_roles">
+        <Association Name="FK_users_roles">
           <End Role="Roles" Type="Self.Role" Multiplicity="1" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
@@ -605,7 +605,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="SubCategories_Users">
+        <Association Name="FK_SubCategories_Users">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="SubCategories" Type="Self.SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
@@ -617,7 +617,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Choukash_Revamp_DemoEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Choukash_Revamp_DemoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Companies" EntityType="Self.Company" />
           <EntitySet Name="Items" EntityType="Self.Item" />
@@ -627,59 +627,59 @@
           <EntitySet Name="SubCategories" EntityType="Self.SubCategory" />
           <EntitySet Name="SuperAdmins" EntityType="Self.SuperAdmin" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="Categories_Companies" Association="Self.Categories_Companies">
+          <AssociationSet Name="FK_Categories_Companies" Association="Self.FK_Categories_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Categories" EntitySet="Categories" />
           </AssociationSet>
-          <AssociationSet Name="categories_users" Association="Self.categories_users">
+          <AssociationSet Name="FK_categories_users" Association="Self.FK_categories_users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Categories" EntitySet="Categories" />
           </AssociationSet>
-          <AssociationSet Name="subcategories_categories" Association="Self.subcategories_categories">
+          <AssociationSet Name="FK_subcategories_categories" Association="Self.FK_subcategories_categories">
             <End Role="Categories" EntitySet="Categories" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="companies_superadmin" Association="Self.companies_superadmin">
-            <End Role="SuperAdmin" EntitySet="SuperAdmins" />
+          <AssociationSet Name="FK_companies_superadmin" Association="Self.FK_companies_superadmin">
+            <End Role="SuperAdmins" EntitySet="SuperAdmins" />
             <End Role="Companies" EntitySet="Companies" />
           </AssociationSet>
-          <AssociationSet Name="Items_Companies" Association="Self.Items_Companies">
+          <AssociationSet Name="FK_Items_Companies" Association="Self.FK_Items_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="roles_companies" Association="Self.roles_companies">
+          <AssociationSet Name="FK_roles_companies" Association="Self.FK_roles_companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Roles" EntitySet="Roles" />
           </AssociationSet>
-          <AssociationSet Name="SubCategories_Companies" Association="Self.SubCategories_Companies">
+          <AssociationSet Name="FK_SubCategories_Companies" Association="Self.FK_SubCategories_Companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="users_companies" Association="Self.users_companies">
+          <AssociationSet Name="FK_users_companies" Association="Self.FK_users_companies">
             <End Role="Companies" EntitySet="Companies" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="items_subcategories" Association="Self.items_subcategories">
+          <AssociationSet Name="FK_items_subcategories" Association="Self.FK_items_subcategories">
             <End Role="SubCategories" EntitySet="SubCategories" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="Items_Users" Association="Self.Items_Users">
+          <AssociationSet Name="FK_Items_Users" Association="Self.FK_Items_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Items" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="role_permission_permissions" Association="Self.role_permission_permissions">
+          <AssociationSet Name="FK_role_permission_permissions" Association="Self.FK_role_permission_permissions">
             <End Role="Permissions" EntitySet="Permissions" />
             <End Role="Role_Permission" EntitySet="Role_Permission" />
           </AssociationSet>
-          <AssociationSet Name="role_permission_roles" Association="Self.role_permission_roles">
+          <AssociationSet Name="FK_role_permission_roles" Association="Self.FK_role_permission_roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Role_Permission" EntitySet="Role_Permission" />
           </AssociationSet>
-          <AssociationSet Name="users_roles" Association="Self.users_roles">
+          <AssociationSet Name="FK_users_roles" Association="Self.FK_users_roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="SubCategories_Users" Association="Self.SubCategories_Users">
+          <AssociationSet Name="FK_SubCategories_Users" Association="Self.FK_SubCategories_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="SubCategories" EntitySet="SubCategories" />
           </AssociationSet>
@@ -689,7 +689,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Choukash_Revamp_DemoModelStoreContainer" CdmEntityContainer="Choukash_Revamp_DemoEntities1">
+        <EntityContainerMapping StorageEntityContainer="Choukash_Revamp_DemoModelStoreContainer" CdmEntityContainer="Choukash_Revamp_DemoEntities">
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="Choukash_Revamp_DemoModel.Category">
               <MappingFragment StoreEntitySet="Categories">
@@ -765,7 +765,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="SuperAdmins">
             <EntityTypeMapping TypeName="Choukash_Revamp_DemoModel.SuperAdmin">
-              <MappingFragment StoreEntitySet="SuperAdmin">
+              <MappingFragment StoreEntitySet="SuperAdmins">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="email" ColumnName="email" />

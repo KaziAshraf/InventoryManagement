@@ -13,7 +13,7 @@ namespace ChoukashRevamp.ViewModels
     {
         #region Decleration
         private readonly User _user;
-        private readonly Choukash_Revamp_DemoEntities1 context = new Choukash_Revamp_DemoEntities1();
+        private readonly Choukash_Revamp_DemoEntities context = new Choukash_Revamp_DemoEntities();
         private EditProductViewModel userrolepage { get; set; }
         private InventoryViewModel inventorypage { get; set; }
         public IEventAggregator EventAggregator { get; set; } 

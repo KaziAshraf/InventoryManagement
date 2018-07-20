@@ -16,7 +16,7 @@ namespace ChoukashRevamp.ViewModels
         private ObservableCollection<Category> _categories;
         private ObservableCollection<SubCategory> _subcategories;
 
-        private Choukash_Revamp_DemoEntities1 Context = new Choukash_Revamp_DemoEntities1();
+        private Choukash_Revamp_DemoEntities Context = new Choukash_Revamp_DemoEntities();
         private bool _createcategory;
         private bool _createsubcategory;
 

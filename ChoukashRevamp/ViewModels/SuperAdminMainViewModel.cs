@@ -40,7 +40,7 @@ namespace ChoukashRevamp.ViewModels
 
             this.SA = sa;
             
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 if (ctx.Permissions.Count<Permission>() == 0) 
                 {

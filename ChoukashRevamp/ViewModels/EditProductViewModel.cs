@@ -317,7 +317,7 @@ namespace ChoukashRevamp.ViewModels
 
         private void ConfigureforUser()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 var company = ctx.Companies.Include(a => a.Roles).Include(a => a.Users).Where(a => a.id == User.companies_id).SingleOrDefault();
                 this.CompanyCollection = new ObservableCollection<Company>() { company };
@@ -329,7 +329,7 @@ namespace ChoukashRevamp.ViewModels
         #region Companies
         private void GetAllCompanies()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 var companies = ctx.Companies.Include(a => a.Roles).Include(a => a.Users).ToList();
                 this.CompanyCollection = new ObservableCollection<Company>(companies);
@@ -351,7 +351,7 @@ namespace ChoukashRevamp.ViewModels
                     BorderThickness = 0;
                 }
 
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     //if (this.UserCollection != null)
                     //{
@@ -408,7 +408,7 @@ namespace ChoukashRevamp.ViewModels
             if (currentCompany != null)
             {
 
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     var company = ctx.Companies.Where(a => a.id == currentCompany.id).SingleOrDefault<Company>();
                     if (company != null)
@@ -459,7 +459,7 @@ namespace ChoukashRevamp.ViewModels
         }
         public void DeleteUser(User user)
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 if (user != null)
                 {
@@ -474,7 +474,7 @@ namespace ChoukashRevamp.ViewModels
         }
         private void EditUser()
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
                 var user = ctx.Users.Include(a => a.Role).Include(a => a.Company).Where(a => a.id == CurrentUser.id).SingleOrDefault<User>();
                 var _user = this.UserCollection.Where(a => a.id == CurrentUser.id).SingleOrDefault<User>();
@@ -664,7 +664,7 @@ namespace ChoukashRevamp.ViewModels
                 BorderThickness = 0;
 
 
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     if (this.UserRoles != null)
                     {
@@ -689,7 +689,7 @@ namespace ChoukashRevamp.ViewModels
             if (String.IsNullOrWhiteSpace(ErrorUserName) && String.IsNullOrWhiteSpace(ErrorUserEmail)
                 && String.IsNullOrWhiteSpace(ErrorPassword) && String.IsNullOrWhiteSpace(ErrorConfirmPassword) && String.IsNullOrWhiteSpace(ErrorUserRole))
             {
-                using (var ctx = new Choukash_Revamp_DemoEntities1())
+                using (var ctx = new Choukash_Revamp_DemoEntities())
                 {
                     ctx.Users.Add(new User()
                     {
@@ -715,7 +715,7 @@ namespace ChoukashRevamp.ViewModels
         #region Roles
         public void UpdateRole(Role role, User user)
         {
-            using (var ctx = new Choukash_Revamp_DemoEntities1())
+            using (var ctx = new Choukash_Revamp_DemoEntities())
             {
 
                 var _user = ctx.Users.Include(a => a.Role).Where(a => a.id == SelectedUser.id).SingleOrDefault<User>();

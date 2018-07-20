@@ -43,7 +43,7 @@ namespace ChoukashRevamp.ViewModels
             this.WindowHeight = 500;
             this.WindowWidth = 600;
 
-            using (var ctx = new Choukash_Revamp_DemoEntities1()) {
+            using (var ctx = new Choukash_Revamp_DemoEntities()) {
                 int __count = ctx.SuperAdmins.Count<SuperAdmin>();
                 if (__count == 0)
                 {
